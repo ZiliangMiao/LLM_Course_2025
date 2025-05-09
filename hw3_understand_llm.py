@@ -114,7 +114,7 @@ if __name__ == '__main__':
     )
 
     # ## Q1. Chat template comparison
-    # question = "Please tell me about the key differences between supervised learning and unsupervised learning. Answer in 200 words."
+    question = "Please tell me about the key differences between supervised learning and unsupervised learning. Answer in 200 words."
     # # 1.1 Without chat template
     # response_without_template = generate_text_from_prompt(question, tokenizer, model)
     # response_without_template = response_without_template.split('words.')[-1]
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     # print(f"========== Coherence score w/o template : {wo_score:.4f}  ==========")
     #
     # # 1.2 With chat template
-    # chat = [{"role": "user", "content": question},]
+    chat = [{"role": "user", "content": question},]
     # prompt_with_template = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
     # response_with_template = generate_text_from_prompt(prompt_with_template, tokenizer, model)
     # response_with_template = response_with_template.split('model\n')[-1].strip('\n').strip()
@@ -137,54 +137,62 @@ if __name__ == '__main__':
     # 2nd: "Thats great! Now, could you tell me another color that I can find in a rainbow?"
     # 3rd: "Could you continue and name yet another color from the rainbow?"
     chat_history = []
-    round = 0
-    print("Chatbot: Hello! How can I assist you today? (Type 'exit' to quit)")
+    # round = 0
+    # print("Chatbot: Hello! How can I assist you today? (Type 'exit' to quit)")
+    #
+    # while True:
+    #     user_input = input("You: ")
+    #     if user_input.lower() == "exit":
+    #         print("Chatbot: Goodbye!")
+    #         break
+    #
+    #     round += 1
+    #     chat_history.append({"role": "user", "content": user_input})
+    #     chat_template_format_prompt = tokenizer.apply_chat_template(chat_history, tokenize=False, add_generation_prompt=True)
+    #
+    #     # 2.1 Observe the prompt with chat template format that was inputted to the model in the current round
+    #     print(
+    #         f"=== Prompt with chat template format inputted to the model on round {round} ===\n{chat_template_format_prompt}")
+    #     print(f"===============================================")
+    #
+    #     # Tokenization
+    #     inputs = tokenizer(chat_template_format_prompt, return_tensors="pt").to("cuda")
+    #
+    #     # Get logits instead of directly generating
+    #     with torch.no_grad():
+    #         outputs_p = model(**inputs)  # without generate
+    #     logits = outputs_p.logits  # logits of the model output (raw scores before softmax)
+    #     last_token_logits = logits[:, -1, :]  # logits of the last generated token
+    #
+    #     # Apply softmax to get probabilities
+    #     probs = torch.nn.functional.softmax(last_token_logits, dim=-1)
+    #
+    #     # Get top-k tokens (e.g., 10)
+    #     top_probs, top_indices = torch.topk(probs, k=10)
+    #
+    #     # Convert to numpy for plotting
+    #     top_probs = top_probs.cpu().squeeze().numpy()
+    #     top_indices = top_indices.cpu().squeeze().numpy()
+    #     top_tokens = [tokenizer.decode([idx]) for idx in top_indices]
+    #
+    #     # Plot probability distribution
+    #     plt.figure(figsize=(10, 5))
+    #     sns.barplot(x=top_probs, y=top_tokens, palette="coolwarm")
+    #     plt.xlabel("Probability")
+    #     plt.ylabel("Token")
+    #     plt.title("Top Token Probabilities for Next Word")
+    #     plt.show()
+    #
+    #     # Generate response
+    #     outputs = model.generate(**inputs, max_new_tokens=200, pad_token_id=tokenizer.eos_token_id, do_sample=False)
+    #     response = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)  # response contains the input tokens, start from the model output
+    #     print(f"Chatbot: {response}")
+    #     chat_history.append({"role": "assistant", "content": response})
 
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() == "exit":
-            print("Chatbot: Goodbye!")
-            break
-
-        round += 1
-        chat_history.append({"role": "user", "content": user_input})
-        chat_template_format_prompt = tokenizer.apply_chat_template(chat_history, tokenize=False, add_generation_prompt=True)
-
-        # 2.1 Observe the prompt with chat template format that was inputted to the model in the current round
-        print(
-            f"=== Prompt with chat template format inputted to the model on round {round} ===\n{chat_template_format_prompt}")
-        print(f"===============================================")
-
-        # Tokenization
-        inputs = tokenizer(chat_template_format_prompt, return_tensors="pt").to("cuda")
-
-        # Get logits instead of directly generating
-        with torch.no_grad():
-            outputs_p = model(**inputs)  # without generate
-        logits = outputs_p.logits  # logits of the model output (raw scores before softmax)
-        last_token_logits = logits[:, -1, :]  # logits of the last generated token
-
-        # Apply softmax to get probabilities
-        probs = torch.nn.functional.softmax(last_token_logits, dim=-1)
-
-        # Get top-k tokens (e.g., 10)
-        top_probs, top_indices = torch.topk(probs, k=10)
-
-        # Convert to numpy for plotting
-        top_probs = top_probs.cpu().squeeze().numpy()
-        top_indices = top_indices.cpu().squeeze().numpy()
-        top_tokens = [tokenizer.decode([idx]) for idx in top_indices]
-
-        # Plot probability distribution
-        plt.figure(figsize=(10, 5))
-        sns.barplot(x=top_probs, y=top_tokens, palette="coolwarm")
-        plt.xlabel("Probability")
-        plt.ylabel("Token")
-        plt.title("Top Token Probabilities for Next Word")
-        plt.show()
-
-        # Generate response
-        outputs = model.generate(**inputs, max_new_tokens=200, pad_token_id=tokenizer.eos_token_id, do_sample=False)
-        response = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)  # response contains the input tokens, start from the model output
-        print(f"Chatbot: {response}")
-        chat_history.append({"role": "assistant", "content": response})
+    ## Q3. Tokenization a sentence
+    sentence = "I love taking a Machine Learning course by Professor Hung-yi Lee, What about you?"
+    inputs = tokenizer(sentence, return_tensors="pt", add_special_tokens=False).to("cuda") # pt = pytorch tensor
+    token_ids = inputs["input_ids"][0]
+    for t_id in token_ids:
+        t = tokenizer.decode(t_id, skip_special_tokens=True)  # decode token ids back to tokens, i.e., words or subwords
+        print(f"Token: {t} --- Token index: {t_id}")  # print the token and its token index (token id)

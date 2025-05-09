@@ -1,6 +1,7 @@
 # hugging face
 import matplotlib.pyplot as plt
 import seaborn as sns
+import yaml
 from huggingface_hub import login
 import os
 
@@ -80,11 +81,16 @@ def generate_text_from_prompt(prompt, tokenizer, model):
 
 
 if __name__ == '__main__':
+    # get hugging face token from config file
+    with open("api/api.yaml", "r") as f:
+        api_cfg = yaml.safe_load(f)
+        hf_tok = api_cfg["hf_tok"]
+
     # 根据模式决定是否登录
     if not LOCAL_MODE:
         try:
             print("登录 Hugging Face...")
-            # login(HF_TOK)
+            login(hf_tok)
             print("登录成功!")
         except Exception as e:
             print(f"登录失败: {e}")

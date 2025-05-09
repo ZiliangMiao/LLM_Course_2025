@@ -1,0 +1,58 @@
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+ENV/
+.env
+.venv
+env/
+
+# IDE相关文件
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# 日志文件
+*.log
+logs/
+
+# 本地配置
+.local/
+.config/
+
+# 预训练模型文件夹
+pretrained models/
+pretrained models/*
+**/pretrained models/
+
+# APIs
+api/
+**/api/
+api/*
+
+
+# 数据集
+/datasets/
+datasets/
+
+# 临时文件
+/tmp/
+*.tmp 
